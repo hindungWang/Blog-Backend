@@ -11,7 +11,8 @@ func main()  {
 	r := gin.Default()
 	r.Use(cors.Default())
 
-	r.GET("/api/blogs/year/:year", router.GetBlogsByYea)
+	r.GET("/api/blogs/year/:year", router.GetBlogsByYear)
+	r.GET("/api/blogs/kind/:kind", router.GetBlogsByKind)
 	
 	r.GET("/api/detail/:id", router.GetBlogDetail)
     err := r.Run()

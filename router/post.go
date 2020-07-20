@@ -21,7 +21,7 @@ type Post struct {
 
 // GetBlogsByYea func return
 // @GET /api/blogs/year/2020
-func GetBlogsByYea(c *gin.Context) {
+func GetBlogsByYear(c *gin.Context) {
 	var res []Post
 	_ = c.Param("year")
 	for i:=1;i<20;i++ {
@@ -31,7 +31,28 @@ func GetBlogsByYea(c *gin.Context) {
 			Date: "fsd1",
 			Year: "rfse1",
 			Summary: `ksdjfaj
-			dsfsjsdfsf***fgdsfg***`,
+			dsfsjsdfsf***fgdsfg***jfdgajlajdkjfsdfaafweiohhhhhhhhhhhhhhf
+fsldjjjjjjjjjjjjjjjjjjjaaaaaaaaaaaaaaaaaaaaaafffffffffffffffffffffffff
+fjaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaeiiiiiiiiiiiii`,
+		}
+		res = append(res, one)
+	}
+	c.JSON(http.StatusOK, res)
+}
+
+func GetBlogsByKind(c *gin.Context) {
+	var res []Post
+	_ = c.Param("year")
+	for i:=1;i<20;i++ {
+		one := Post{
+			ID: i,
+			Title: "ttt1",
+			Date: "fsd1",
+			Year: "rfse1",
+			Summary: `ksdjfaj
+			dsfsjsdfsf***fgdsfg***jfdgajlajdkjfsdfaafweiohhhhhhhhhhhhhhf
+fsldjjjjjjjjjjjjjjjjjjjaaaaaaaaaaaaaaaaaaaaaafffffffffffffffffffffffff
+fjaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaeiiiiiiiiiiiii`,
 		}
 		res = append(res, one)
 	}
@@ -67,7 +88,6 @@ func GetBlogDetail(c *gin.Context)  {
     defer fi.Close()
 
 	fd, err := ioutil.ReadAll(fi)
-	log.Println(string(fd))
 	res.Detail = postDetail{
 		ID: id,
 		Title: "ddasdfsadf",
