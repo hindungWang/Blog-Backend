@@ -34,6 +34,7 @@ func GetBlogsByYear(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, res)
 }
+
 // @GET /api/blogs/kind/docker
 func GetBlogsByKind(c *gin.Context) {
 	var res []Post

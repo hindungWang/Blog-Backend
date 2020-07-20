@@ -2,11 +2,15 @@ package _type
 
 import (
 	"fmt"
+	"log"
 	"testing"
 )
 
 func TestArticleGenerator(t *testing.T) {
-	a,_ := ArticleGenerator("../static/0.md")
+	a,err := ArticleGenerator("../static/1")
+	if err != nil {
+		log.Fatal(err)
+	}
 	fmt.Println(a)
 }
 
