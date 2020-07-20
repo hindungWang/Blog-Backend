@@ -4,6 +4,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/mangoqiqi/Blog-Backend/router"
+	"log"
 )
 
 func main()  {
@@ -13,5 +14,8 @@ func main()  {
 	r.GET("/api/blogs/year/:year", router.GetBlogsByYea)
 	
 	r.GET("/api/detail/:id", router.GetBlogDetail)
-    r.Run()
+    err := r.Run()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 }
