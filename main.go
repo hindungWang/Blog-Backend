@@ -9,7 +9,7 @@ import (
 	"log"
 )
 
-func Sync() {
+func Sync(p string) {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		log.Fatal(err)
@@ -25,7 +25,7 @@ func Sync() {
 				if event.Op&fsnotify.Write == fsnotify.Write {
 					log.Println("modified file:", event.Name)
 				}
-				go _type.SyncArticle("./static/")
+				go _type.SyncArticle(p)
 			case err := <-watcher.Errors:
 				log.Println("error:", err)
 			}
@@ -37,15 +37,18 @@ func Sync() {
 	}
 	<-done
 }
+
+const Path = "./static/"
 func main() {
 	r := gin.Default()
 	r.Use(cors.Default())
 
-	go Sync()
+	go _type.SyncArticle(Path)
 	r.GET("/api/blogs/year/:year", router.GetBlogsByYear)
 	r.GET("/api/blogs/kind/:kind", router.GetBlogsByKind)
 	r.GET("/api/detail/:id", router.GetBlogDetail)
 	r.GET("/api/blogs/all", router.GetAllBlogs)
+	go Sync(Path)
 	err := r.Run()
 	if err != nil {
 		log.Fatal(err.Error())

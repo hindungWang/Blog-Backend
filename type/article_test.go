@@ -16,4 +16,5 @@ func TestArticleGenerator(t *testing.T) {
 
 func TestSyncArticle(t *testing.T) {
 	SyncArticle("../static/")
+	log.Println(IDToArt["0"].Year)
 }
