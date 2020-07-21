@@ -88,7 +88,7 @@ func getIDFromPath(p string) string {
 }
 
 func SyncArticle(pathDir string) {
-	IDToArt = make(map[string]*Article)
+	Art := make(map[string]*Article)
 	files, _ := ioutil.ReadDir(pathDir)
 	for _,file := range files {
 		if file.IsDir() {
@@ -99,7 +99,8 @@ func SyncArticle(pathDir string) {
 				log.Println(err.Error())
 				continue
 			}
-			IDToArt[art.ID] = art
+			Art[art.ID] = art
 		}
 	}
+	IDToArt = Art
 }

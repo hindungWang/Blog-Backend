@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/fsnotify/fsnotify"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/mangoqiqi/Blog-Backend/router"
@@ -8,16 +9,44 @@ import (
 	"log"
 )
 
-func main()  {
+func Sync() {
+	watcher, err := fsnotify.NewWatcher()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer watcher.Close()
+
+	done := make(chan bool)
+	go func() {
+		for {
+			select {
+			case event := <-watcher.Events:
+				log.Println("event:", event)
+				if event.Op&fsnotify.Write == fsnotify.Write {
+					log.Println("modified file:", event.Name)
+				}
+				go _type.SyncArticle("./static/")
+			case err := <-watcher.Errors:
+				log.Println("error:", err)
+			}
+		}
+	}()
+	err = watcher.Add("./static/")
+	if err != nil {
+		log.Fatal(err)
+	}
+	<-done
+}
+func main() {
 	r := gin.Default()
 	r.Use(cors.Default())
 
-	go _type.SyncArticle("./static/")
+	go Sync()
 	r.GET("/api/blogs/year/:year", router.GetBlogsByYear)
 	r.GET("/api/blogs/kind/:kind", router.GetBlogsByKind)
 	r.GET("/api/detail/:id", router.GetBlogDetail)
 	r.GET("/api/blogs/all", router.GetAllBlogs)
-    err := r.Run()
+	err := r.Run()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
