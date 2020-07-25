@@ -31,7 +31,7 @@ func Sync(p string) {
 			}
 		}
 	}()
-	err = watcher.Add("./static/")
+	err = watcher.Add(p)
 	if err != nil {
 		log.Fatal(err)
 	}
