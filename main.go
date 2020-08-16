@@ -43,7 +43,7 @@ func main() {
 	r := gin.Default()
 	r.Use(cors.Default())
 
-	go _type.SyncArticle(Path)
+	_type.SyncArticle(Path)
 	r.GET("/api/blogs/year/:year", router.GetBlogsByYear)
 	r.GET("/api/blogs/kind/:kind", router.GetBlogsByKind)
 	r.GET("/api/detail/:id", router.GetBlogDetail)

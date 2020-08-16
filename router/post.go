@@ -39,16 +39,15 @@ func GetBlogsByYear(c *gin.Context) {
 func GetBlogsByKind(c *gin.Context) {
 	var res []Post
 	k := c.Param("kind")
-	for _, v := range _type.IDToArt {
-		if _,ok := v.Tags[k]; ok {
-			res = append(res, Post{
-				ID:      v.ID,
-				Title:   v.Title,
-				Date:    v.Date,
-				Year:    v.Year,
-				Summary: v.Summary,
-			})
-		}
+	for _, v := range _type.KindToID[k] {
+		art := _type.IDToArt[v]
+		res = append(res, Post{
+			ID:      art.ID,
+			Title:   art.Title,
+			Date:    art.Date,
+			Year:    art.Year,
+			Summary: art.Summary,
+		})
 	}
 	c.JSON(http.StatusOK, res)
 }

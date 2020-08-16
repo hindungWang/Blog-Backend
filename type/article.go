@@ -2,28 +2,35 @@ package _type
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/spf13/viper"
 )
 
 const filePath = "../static/"
 
+// IDToArt ID --> article
 var IDToArt map[string]*Article
+// KindToID xxx
+var KindToID map[string][]string
 
 type Article struct {
-	ID      string         `json:"id"`
-	Title   string         `json:"title"`
-	Date    string         `json:"date"`
-	Year    string         `json:"year"`
-	Summary string         `json:"summary"`
-	Tags    map[string]int `json:"tags"`
-	Content string         `json:"content"`
+	ID      string   `mapstructure:"Id"`
+	Title   string   `mapstructure:"Title"`
+	Date    string   `mapstructure:"Date"`
+	Year    string   `mapstructure:"Year"`
+	Summary string   `mapstructure:"Summary"`
+	Tags    []string `mapstructure:"Tags"`
+	Content string
 }
 
+// ArticleGenerator return
 func ArticleGenerator(path string) (*Article, error) {
 	fd, err := os.Open(path)
 	if err != nil {
@@ -31,66 +38,47 @@ func ArticleGenerator(path string) (*Article, error) {
 	}
 	defer fd.Close()
 	reader := bufio.NewReader(fd)
-	var line int
-	var str []string
+	var flag int
+	var config []byte
 	var content string
+	sp := []byte("\n")
+
 	for {
-		a, _, e := reader.ReadLine()
+		res, _, e := reader.ReadLine()
 		if e == io.EOF {
 			break
 		}
-		if line < 5 {
-			str = append(str, string(a))
+		if flag < 2 {
+			if strings.Contains(string(res), "---") {
+				flag++
+				continue
+			}
+			config = append(config, res...)
+			config = append(config, sp...)
 		} else {
-			content += fmt.Sprintf("%s\n", string(a))
+			content += fmt.Sprintf("%s\n", string(res))
 		}
-		line++
 	}
-	if len(str) < 5 {
-		return nil, fmt.Errorf("read err!")
+
+	viper.SetConfigType("yaml")
+	viper.ReadConfig(bytes.NewBuffer(config))
+
+	article := &Article{}
+
+	err = viper.Unmarshal(article)
+	if err != nil {
+		return nil, err
 	}
-	var title string = str[0][6:]
-	var date string = str[1][5:]
-	var year string = str[2][5:]
-	var sum string = str[3][8:]
-	var tag []string = strings.Split(str[4][4:], ",")
-	tags := make(map[string]int)
-	for _,v := range tag {
-		tags[v]++
-	}
-	article := &Article{
-		ID:      getIDFromPath(path),
-		Title:   title,
-		Date:    date,
-		Year:    year,
-		Summary: sum,
-		Tags:    tags,
-		Content: content,
-	}
+	article.Content = content
 	return article, nil
 }
 
-func getIDFromPath(p string) string {
-	i := len(p) - 1
-	for ; i >= 0; i-- {
-		if p[i] == '/' {
-			break
-		}
-	}
-	var res string
-	for j := i + 1; j < len(p); j++ {
-		if p[j] == '.' {
-			break
-		}
-		res += string(p[j])
-	}
-	return res
-}
-
+// SyncArticle return
 func SyncArticle(pathDir string) {
 	Art := make(map[string]*Article)
+	Index := make(map[string][]string)
 	files, _ := ioutil.ReadDir(pathDir)
-	for _,file := range files {
+	for _, file := range files {
 		if file.IsDir() {
 			continue
 		} else {
@@ -100,7 +88,15 @@ func SyncArticle(pathDir string) {
 				continue
 			}
 			Art[art.ID] = art
+			for _,v := range art.Tags {
+				tmp := Index[v]
+				tmp = append(tmp, art.ID)
+				Index[v] = tmp
+			}
 		}
 	}
 	IDToArt = Art
+	KindToID = Index
+	//log.Println(IDToArt)
+	//log.Println(KindToID)
 }
