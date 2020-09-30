@@ -26,7 +26,6 @@ jobs:
         REMOTE_USER: root
         # Remote por
         # Source directory
-        # Arguments to pass to rsync
         ARGS: "-rltgoDzvO --delete"
 
     - name: git pull
