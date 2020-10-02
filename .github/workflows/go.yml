@@ -24,8 +24,6 @@ jobs:
         REMOTE_HOST: hindung.cn
         # Remote user
         REMOTE_USER: root
-        # Remote por
-        # Source directory
         ARGS: "-rltgoDzvO --delete"
 
     - name: git pull
