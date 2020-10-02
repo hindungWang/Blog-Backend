@@ -22,6 +22,7 @@ jobs:
         # synchronous execution if multiple hosts
         # timeout for ssh to host
         key: ${{secrets.SERVER_SSH_KEY}}
+        username: root
         script: |
           sudo su
           cd /root/Blog-Backend
