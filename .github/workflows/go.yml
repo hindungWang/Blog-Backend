@@ -28,5 +28,6 @@ jobs:
 
     - name: git pull
       run: |
+        sudo su
         cd /root/Blog-Backend
         git pull
