@@ -26,7 +26,7 @@ jobs:
         script: |
           sudo su
           cd /root/Blog-Backend
-          git remote set-url origin https://github.com/hindungWang/Blog-Backend.git
+          git remote set-url origin git@github.com:hindungWang/Blog-Backend.git
           git pull
 
 
