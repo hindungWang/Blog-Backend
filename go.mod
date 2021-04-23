@@ -1,4 +1,4 @@
-module github.com/mangoqiqi/Blog-Backend
+module github.com/hindungWang/Blog-Backend
 
 go 1.14
 
