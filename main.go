@@ -4,8 +4,8 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/mangoqiqi/Blog-Backend/router"
-	_type "github.com/mangoqiqi/Blog-Backend/type"
+	"github.com/hindungWang/Blog-Backend/router"
+	_type "github.com/hindungWang/Blog-Backend/type"
 	"log"
 )
 
