@@ -25,7 +25,7 @@ jobs:
         username: root
         script: |
           sudo su
-          cd /root/Blog-Backend
+          cd /root/blog/backend
           git pull
 
 
